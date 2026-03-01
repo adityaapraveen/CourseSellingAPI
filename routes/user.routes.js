@@ -1,14 +1,11 @@
 import express from 'express'
+import { userSignup, userSignin } from '../controllers/user.controller.js'
 
 export const userRouter = express.Router()
 
-userRouter.post('/signin', (req, res) => {
-    res.send('loginPage')
-})
+userRouter.post('/signup', userSignup)
 
-userRouter.post('/signup', (req, res) => {
-    res.send('signupPage')
-})
+userRouter.post('/signin', userSignin)
 
 userRouter.get('/purchases', (req, res) => {
     res.send('purchasePage')
