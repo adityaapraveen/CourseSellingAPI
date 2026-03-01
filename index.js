@@ -1,30 +1,15 @@
 import express from 'express'
-
+import { userRouter } from './routes/user'
+import { courseRouter } from './routes/course'
 const PORT = 8000
 
 const app = express()
 app.use(express.json())
 
-app.get('/login', (req, res) => {
-    res.send('loginPage')
-})
+app.use('/user', userRouter)
+app.use('/course', courseRouter)
 
-app.get('/signup', (req, res) => {
-    res.send('signupPage')
-})
-
-app.get('/all-courses', (req, res) => {
-    res.send('allCoursesPage')
-})
-
-app.get('/purchase', (req, res) => {
-    res.send('purchasePage')
-})
-
-app.get('/purchased-courses', (req, res) => {
-    res.send('purchasedCoursesPage')
-})
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
+    console.log('server running at ', PORT)
 })
