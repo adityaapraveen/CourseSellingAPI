@@ -1,8 +1,7 @@
 import getDatabase from '../database/db.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-const JWT_ADMIN_PASSWORD = "samsonsanju"
-
+import { JWT_ADMIN_PASSWORD } from '../configs/config.js'
 
 export const adminSignup = async (req, res) => {
     const { email, password, firstName, lastName } = req.body

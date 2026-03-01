@@ -1,8 +1,7 @@
 import getDatabase from '../database/db.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-const JWT_USER_PASSWORD = "champakchacha"
-
+import { JWT_USER_PASSWORD } from '../configs/config.js'
 
 export const userSignup = async (req, res) => {
     const { email, password, firstName, lastName } = req.body
