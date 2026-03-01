@@ -78,3 +78,21 @@ export const userSignin = async (req, res) => {
         return res.status(500).json({ error: 'Server error' })
     }
 }
+
+export const viewPurchasedCourses = async (req, res) => {
+    const userId = req.userId
+
+    try {
+        const db = getDatabase()
+        const purchases = await db.all(
+            `SELECT course.* FROM course
+             JOIN purchase ON course.id = purchase.courseId
+             WHERE purchase.userId = ?`,
+            [userId]
+        )
+        return res.status(200).json({ purchases })
+    } catch (err) {
+        console.error('Purchases error:', err)
+        return res.status(500).json({ error: 'Server error' })
+    }
+}

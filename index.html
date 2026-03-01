@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourseForge</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #080810;
+            --surface: #0f0f1a;
+            --surface2: #16162a;
+            --border: rgba(255, 255, 255, 0.07);
+            --accent: #e8ff47;
+            --accent-dim: rgba(232, 255, 71, 0.12);
+            --text: #eeeef5;
+            --muted: #5a5a72;
+            --danger: #ff4d6d;
+            --success: #3ddc97;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-weight: 300;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .app {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* NAV */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 64px;
+            background: rgba(8, 8, 16, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 400;
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            color: var(--text);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #080810;
+            font-weight: 600;
+        }
+
+        .nav-btn.primary:hover {
+            opacity: 0.88;
+        }
+
+        /* PAGES */
+        .page {
+            display: none;
+            flex: 1;
+            padding: 2.5rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeUp 0.35s ease both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 5rem 1rem 4rem;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: var(--accent-dim);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.9rem;
+            border-radius: 100px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(232, 255, 71, 0.25);
+        }
+
+        .hero h1 {
+            font-family: var(--font-head);
+            font-size: clamp(2.4rem, 6vw, 4.2rem);
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .hero p {
+            color: var(--muted);
+            font-size: 1.05rem;
+            max-width: 480px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #080810;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: var(--surface);
+        }
+
+        .btn-sm {
+            padding: 0.45rem 1rem;
+            font-size: 0.82rem;
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* TYPOGRAPHY */
+        .section-title {
+            font-family: var(--font-head);
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.4rem;
+        }
+
+        .section-sub {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        /* COURSE GRID */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .course-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.14);
+        }
+
+        .course-img {
+            width: 100%;
+            height: 150px;
+            background: var(--surface2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .course-body {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .course-title {
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        .course-desc {
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.5;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .course-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.4rem;
+        }
+
+        .course-price {
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        /* AUTH */
+        .auth-wrap {
+            max-width: 420px;
+            margin: 2rem auto;
+        }
+
+        .auth-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.2rem;
+        }
+
+        .auth-title {
+            font-family: var(--font-head);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.3rem;
+        }
+
+        .auth-sub {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.4rem;
+            background: var(--surface2);
+            padding: 0.3rem;
+            border-radius: 10px;
+            margin-bottom: 1.8rem;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.55rem;
+            border-radius: 7px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--muted);
+            font-family: var(--font-body);
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--surface);
+            color: var(--text);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--muted);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.7rem 0.9rem;
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 300;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: rgba(232, 255, 71, 0.4);
+        }
+
+        input::placeholder {
+            color: var(--muted);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .form-error {
+            color: var(--danger);
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            padding: 0.6rem 0.9rem;
+            background: rgba(255, 77, 109, 0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 77, 109, 0.2);
+            display: none;
+        }
+
+        .form-error.show {
+            display: block;
+        }
+
+        .form-success {
+            color: var(--success);
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            padding: 0.6rem 0.9rem;
+            background: rgba(61, 220, 151, 0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(61, 220, 151, 0.2);
+            display: none;
+        }
+
+        .form-success.show {
+            display: block;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1.2rem 0;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* DASHBOARD */
+        .dash-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.2rem;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-value {
+            font-family: var(--font-head);
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+
+        .stat-value.accent {
+            color: var(--accent);
+        }
+
+        .purchase-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .purchase-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.1rem 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .purchase-title {
+            font-family: var(--font-head);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: -0.02em;
+        }
+
+        .purchase-meta {
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+        }
+
+        .badge-success {
+            background: rgba(61, 220, 151, 0.12);
+            color: var(--success);
+            border: 1px solid rgba(61, 220, 151, 0.2);
+        }
+
+        /* ADMIN */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .panel-title {
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .mode-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.7rem;
+            border-radius: 100px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .mode-pill.user {
+            background: rgba(61, 220, 151, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(61, 220, 151, 0.2);
+        }
+
+        .mode-pill.admin {
+            background: var(--accent-dim);
+            color: var(--accent);
+            border: 1px solid rgba(232, 255, 71, 0.2);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.4
+            }
+        }
+
+        /* EMPTY */
+        .empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--muted);
+        }
+
+        .empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.4;
+        }
+
+        .empty-text {
+            font-size: 0.9rem;
+        }
+
+        /* TOAST */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.9rem 1.3rem;
+            font-size: 0.85rem;
+            z-index: 999;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s;
+            max-width: 300px;
+            pointer-events: none;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        #toast.success {
+            border-color: rgba(61, 220, 151, 0.3);
+            color: var(--success);
+        }
+
+        #toast.error {
+            border-color: rgba(255, 77, 109, 0.3);
+            color: var(--danger);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 1rem;
+            }
+
+            .page {
+                padding: 1.5rem 1rem;
+            }
+
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 3rem 0.5rem 2.5rem;
+            }
+
+            .nav-btn {
+                padding: 0.4rem 0.7rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- NAV -->
+        <nav>
+            <div class="logo" onclick="showPage('home')">Course<span>Forge</span></div>
+            <div class="nav-links">
+                <button class="nav-btn" onclick="showPage('courses')">Browse</button>
+                <button class="nav-btn" id="navSignin" onclick="showPage('auth')">Sign In</button>
+                <button class="nav-btn primary" id="navSignup" onclick="showPage('auth'); switchTab('signup')">Get
+                    Started</button>
+                <button class="nav-btn" id="navDash" style="display:none" onclick="showPage('dashboard')">My
+                    Courses</button>
+                <button class="nav-btn" id="navAdmin" style="display:none" onclick="showPage('admin')">Admin</button>
+                <button class="nav-btn" id="navLogout" style="display:none" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- HOME -->
+        <div class="page active" id="page-home">
+            <div class="hero">
+                <div class="hero-tag">✦ Learn at your own pace</div>
+                <h1>Build skills that<br><em>actually matter</em></h1>
+                <p>Expert-crafted courses designed for real-world outcomes. Start learning today.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" onclick="showPage('courses')">Browse Courses →</button>
+                    <button class="btn btn-outline" onclick="showPage('auth')">Sign Up Free</button>
+                </div>
+            </div>
+            <p class="section-sub" style="text-align:center;margin-bottom:1.5rem">Featured this week</p>
+            <div class="course-grid" id="homeCourseGrid">
+                <div class="empty">
+                    <div class="empty-icon">◌</div>
+                    <p class="empty-text">Loading courses...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALL COURSES -->
+        <div class="page" id="page-courses">
+            <div class="dash-header">
+                <div>
+                    <h2 class="section-title">All Courses</h2>
+                    <p class="section-sub">Explore everything available</p>
+                </div>
+            </div>
+            <div class="course-grid" id="allCourseGrid">
+                <div class="empty">
+                    <div class="empty-icon">◌</div>
+                    <p class="empty-text">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTH -->
+        <div class="page" id="page-auth">
+            <div class="auth-wrap">
+                <div class="auth-card">
+                    <div class="tabs">
+                        <button class="tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
+                        <button class="tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+                        <button class="tab" id="tab-admin" onclick="switchTab('admin')">Admin</button>
+                    </div>
+
+                    <!-- SIGNIN -->
+                    <div id="form-signin">
+                        <p class="auth-title">Welcome back</p>
+                        <p class="auth-sub">Sign in to your account</p>
+                        <div class="form-group"><label>Email</label><input type="email" id="si-email"
+                                placeholder="you@example.com"></div>
+                        <div class="form-group"><label>Password</label><input type="password" id="si-password"
+                                placeholder="••••••••"></div>
+                        <div class="form-error" id="si-error"></div>
+                        <div style="margin-top:1.2rem"><button class="btn btn-primary btn-full"
+                                onclick="handleSignin()">Sign In</button></div>
+                        <div class="divider">or</div>
+                        <button class="btn btn-outline btn-full" onclick="switchTab('signup')">Create an
+                            account</button>
+                    </div>
+
+                    <!-- SIGNUP -->
+                    <div id="form-signup" style="display:none">
+                        <p class="auth-title">Get started</p>
+                        <p class="auth-sub">Create your free account</p>
+                        <div class="form-row">
+                            <div class="form-group"><label>First Name</label><input type="text" id="su-first"
+                                    placeholder="John"></div>
+                            <div class="form-group"><label>Last Name</label><input type="text" id="su-last"
+                                    placeholder="Doe"></div>
+                        </div>
+                        <div class="form-group"><label>Email</label><input type="email" id="su-email"
+                                placeholder="you@example.com"></div>
+                        <div class="form-group"><label>Password</label><input type="password" id="su-password"
+                                placeholder="••••••••"></div>
+                        <div class="form-error" id="su-error"></div>
+                        <div class="form-success" id="su-success"></div>
+                        <div style="margin-top:1.2rem"><button class="btn btn-primary btn-full"
+                                onclick="handleSignup()">Create Account</button></div>
+                        <div class="divider">or</div>
+                        <button class="btn btn-outline btn-full" onclick="switchTab('signin')">Sign in instead</button>
+                    </div>
+
+                    <!-- ADMIN SIGNIN -->
+                    <div id="form-admin" style="display:none">
+                        <p class="auth-title">Admin Portal</p>
+                        <p class="auth-sub">Sign in with admin credentials</p>
+                        <div class="form-group"><label>Email</label><input type="email" id="ad-email"
+                                placeholder="admin@example.com"></div>
+                        <div class="form-group"><label>Password</label><input type="password" id="ad-password"
+                                placeholder="••••••••"></div>
+                        <div class="form-error" id="ad-error"></div>
+                        <div style="margin-top:1.2rem"><button class="btn btn-primary btn-full"
+                                onclick="handleAdminSignin()">Admin Sign In</button></div>
+                        <div class="divider">new admin?</div>
+                        <button class="btn btn-outline btn-full" onclick="switchTab('adminSignup')">Register as
+                            Admin</button>
+                    </div>
+
+                    <!-- ADMIN SIGNUP -->
+                    <div id="form-adminSignup" style="display:none">
+                        <p class="auth-title">Admin Registration</p>
+                        <p class="auth-sub">Create an admin account</p>
+                        <div class="form-row">
+                            <div class="form-group"><label>First Name</label><input type="text" id="asu-first"
+                                    placeholder="Jane"></div>
+                            <div class="form-group"><label>Last Name</label><input type="text" id="asu-last"
+                                    placeholder="Smith"></div>
+                        </div>
+                        <div class="form-group"><label>Email</label><input type="email" id="asu-email"
+                                placeholder="admin@example.com"></div>
+                        <div class="form-group"><label>Password</label><input type="password" id="asu-password"
+                                placeholder="••••••••"></div>
+                        <div class="form-error" id="asu-error"></div>
+                        <div class="form-success" id="asu-success"></div>
+                        <div style="margin-top:1.2rem"><button class="btn btn-primary btn-full"
+                                onclick="handleAdminSignup()">Register Admin</button></div>
+                        <div class="divider">or</div>
+                        <button class="btn btn-outline btn-full" onclick="switchTab('admin')">Back to Admin Sign
+                            In</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- USER DASHBOARD -->
+        <div class="page" id="page-dashboard">
+            <div class="dash-header">
+                <div>
+                    <h2 class="section-title">My Learning <span id="userModePill"></span></h2>
+                    <p class="section-sub">Courses you've enrolled in</p>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="showPage('courses')">+ Browse More</button>
+            </div>
+            <div class="purchase-list" id="purchaseList">
+                <div class="empty">
+                    <div class="empty-icon">◌</div>
+                    <p class="empty-text">Loading your courses...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADMIN PAGE -->
+        <div class="page" id="page-admin">
+            <div class="dash-header">
+                <div>
+                    <h2 class="section-title">Admin Dashboard <span id="adminModePill"></span></h2>
+                    <p class="section-sub">Create and manage your courses</p>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Total Courses</div>
+                    <div class="stat-value accent" id="statCourses">—</div>
+                </div>
+            </div>
+            <div class="admin-layout">
+                <div>
+                    <div class="panel-title"
+                        style="font-family:var(--font-head);font-weight:700;font-size:1rem;letter-spacing:-0.02em;margin-bottom:1.2rem">
+                        Your Courses</div>
+                    <div id="adminCourseList">
+                        <div class="empty">
+                            <div class="empty-icon">◌</div>
+                            <p class="empty-text">No courses yet</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel" id="courseFormPanel">
+                    <div class="panel-title" id="courseFormTitle">New Course</div>
+                    <input type="hidden" id="editCourseId">
+                    <div class="form-group"><label>Title</label><input type="text" id="cf-title"
+                            placeholder="Course title"></div>
+                    <div class="form-group"><label>Description</label><textarea id="cf-desc"
+                            placeholder="What will students learn?"></textarea></div>
+                    <div class="form-group"><label>Price (₹)</label><input type="number" id="cf-price"
+                            placeholder="999"></div>
+                    <div class="form-group"><label>Image URL</label><input type="url" id="cf-img"
+                            placeholder="https://..."></div>
+                    <div class="form-error" id="cf-error"></div>
+                    <div style="display:flex;gap:0.6rem;margin-top:1rem">
+                        <button class="btn btn-primary" style="flex:1" id="courseSubmitBtn"
+                            onclick="handleCourseSubmit()">Publish</button>
+                        <button class="btn btn-outline btn-sm" onclick="resetCourseForm()" id="cancelEditBtn"
+                            style="display:none">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+        const API = '/api/v1'
+        let state = { token: null, adminToken: null, role: null, user: null }
+
+        // UTILS
+        function toast(msg, type = 'success') {
+            const t = document.getElementById('toast')
+            t.textContent = msg
+            t.className = `show ${type}`
+            clearTimeout(t._tid)
+            t._tid = setTimeout(() => t.className = '', 3200)
+        }
+        function showError(id, msg) {
+            const el = document.getElementById(id)
+            if (!el) return
+            el.textContent = msg
+            el.classList.add('show')
+        }
+        function clearErrors(...ids) { ids.forEach(id => document.getElementById(id)?.classList.remove('show')) }
+        function showSuccess(id, msg) {
+            const el = document.getElementById(id)
+            if (!el) return
+            el.textContent = msg
+            el.classList.add('show')
+        }
+
+        async function apiFetch(path, options = {}) {
+            const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) }
+            const token = state.role === 'admin' ? state.adminToken : state.token
+            if (token) headers['Authorization'] = `Bearer ${token}`
+            try {
+                const res = await fetch(API + path, { ...options, headers })
+                const data = await res.json().catch(() => ({}))
+                return { ok: res.ok, status: res.status, data }
+            } catch (e) {
+                return { ok: false, status: 0, data: { error: 'Network error. Is the server running?' } }
+            }
+        }
+
+        // NAVIGATION
+        function showPage(name) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+            document.getElementById('page-' + name).classList.add('active')
+            if (name === 'courses') loadAllCourses()
+            if (name === 'dashboard') loadPurchases()
+            if (name === 'admin') loadAdminCourses()
+            if (name === 'home') loadHomeCourses()
+            window.scrollTo(0, 0)
+        }
+
+        function updateNav() {
+            const isUser = !!state.token
+            const isAdmin = !!state.adminToken
+            document.getElementById('navSignin').style.display = (isUser || isAdmin) ? 'none' : ''
+            document.getElementById('navSignup').style.display = (isUser || isAdmin) ? 'none' : ''
+            document.getElementById('navLogout').style.display = (isUser || isAdmin) ? '' : 'none'
+            document.getElementById('navDash').style.display = isUser ? '' : 'none'
+            document.getElementById('navAdmin').style.display = isAdmin ? '' : 'none'
+
+            document.getElementById('userModePill').innerHTML = state.user
+                ? `<span class="mode-pill user"><span class="dot"></span>${escHtml(state.user.firstName || 'User')}</span>` : ''
+            document.getElementById('adminModePill').innerHTML = isAdmin
+                ? `<span class="mode-pill admin"><span class="dot"></span>Admin</span>` : ''
+        }
+
+        // TABS
+        function switchTab(tab) {
+            ['signin', 'signup', 'admin', 'adminSignup'].forEach(t => {
+                document.getElementById('form-' + t).style.display = 'none'
+                const el = document.getElementById('tab-' + t)
+                if (el) el.classList.remove('active')
+            })
+            document.getElementById('form-' + tab).style.display = 'block'
+            const activeTab = tab === 'adminSignup' ? 'admin' : tab
+            document.getElementById('tab-' + activeTab)?.classList.add('active')
+        }
+
+        // SIGN IN
+        async function handleSignin() {
+            clearErrors('si-error')
+            const email = document.getElementById('si-email').value.trim()
+            const password = document.getElementById('si-password').value
+            if (!email || !password) return showError('si-error', 'Please fill in all fields.')
+            const { ok, data } = await apiFetch('/user/signin', { method: 'POST', body: JSON.stringify({ email, password }) })
+            if (!ok) return showError('si-error', data.error || data.message || 'Sign in failed.')
+            state.token = data.token
+            state.user = data.user
+            state.role = 'user'
+            updateNav()
+            toast('Welcome back! 👋')
+            showPage('dashboard')
+        }
+
+        // SIGN UP
+        async function handleSignup() {
+            clearErrors('su-error')
+            const firstName = document.getElementById('su-first').value.trim()
+            const lastName = document.getElementById('su-last').value.trim()
+            const email = document.getElementById('su-email').value.trim()
+            const password = document.getElementById('su-password').value
+            if (!firstName || !lastName || !email || !password) return showError('su-error', 'All fields are required.')
+            const { ok, data } = await apiFetch('/user/signup', { method: 'POST', body: JSON.stringify({ firstName, lastName, email, password }) })
+            if (!ok) return showError('su-error', data.error || data.message || 'Signup failed.')
+            showSuccess('su-success', 'Account created! You can now sign in.')
+            toast('Account created ✓')
+            setTimeout(() => switchTab('signin'), 1500)
+        }
+
+        // ADMIN SIGNIN
+        async function handleAdminSignin() {
+            clearErrors('ad-error')
+            const email = document.getElementById('ad-email').value.trim()
+            const password = document.getElementById('ad-password').value
+            if (!email || !password) return showError('ad-error', 'Please fill in all fields.')
+            const { ok, data } = await apiFetch('/admin/signin', { method: 'POST', body: JSON.stringify({ email, password }) })
+            if (!ok) return showError('ad-error', data.error || data.message || 'Admin sign in failed.')
+            state.adminToken = data.token
+            state.role = 'admin'
+            updateNav()
+            toast('Admin access granted ✓')
+            showPage('admin')
+        }
+
+        // ADMIN SIGNUP
+        async function handleAdminSignup() {
+            clearErrors('asu-error')
+            const firstName = document.getElementById('asu-first').value.trim()
+            const lastName = document.getElementById('asu-last').value.trim()
+            const email = document.getElementById('asu-email').value.trim()
+            const password = document.getElementById('asu-password').value
+            if (!firstName || !lastName || !email || !password) return showError('asu-error', 'All fields are required.')
+            // Temporarily remove token so signup isn't treated as authenticated
+            const saved = { token: state.token, adminToken: state.adminToken, role: state.role }
+            state.token = null; state.adminToken = null; state.role = null
+            const { ok, data } = await apiFetch('/admin/signup', { method: 'POST', body: JSON.stringify({ firstName, lastName, email, password }) })
+            Object.assign(state, saved)
+            if (!ok) return showError('asu-error', data.error || data.message || 'Admin signup failed.')
+            showSuccess('asu-success', 'Admin registered! Sign in now.')
+            toast('Admin registered ✓')
+            setTimeout(() => switchTab('admin'), 1500)
+        }
+
+        // LOGOUT
+        function logout() {
+            state = { token: null, adminToken: null, role: null, user: null }
+            updateNav()
+            toast('Logged out', 'error')
+            showPage('home')
+        }
+
+        // COURSE CARDS
+        const emojis = ['📘', '🎨', '⚡', '🔬', '🎵', '💡', '🖥️', '🌍', '🚀', '🧠']
+        function courseCard(c, showBuy = false) {
+            const emoji = emojis[c.id % emojis.length]
+            const buyBtn = showBuy && state.token
+                ? `<button class="btn btn-primary btn-sm" onclick="purchaseCourse(${c.id}, this)">Enroll</button>`
+                : showBuy && !state.token
+                    ? `<button class="btn btn-outline btn-sm" onclick="showPage('auth')">Sign in</button>`
+                    : ''
+            return `
+  <div class="course-card">
+    <div class="course-img">${emoji}</div>
+    <div class="course-body">
+      <div class="course-title">${escHtml(c.title)}</div>
+      <div class="course-desc">${escHtml(c.description)}</div>
+      <div class="course-footer">
+        <div class="course-price">₹${c.price}</div>
+        ${buyBtn}
+      </div>
+    </div>
+  </div>`
+        }
+
+        // LOAD COURSES (public)
+        async function loadAllCourses() {
+            document.getElementById('allCourseGrid').innerHTML = loading()
+            const { ok, data } = await apiFetch('/course/preview')
+            if (!ok || !data.courses?.length) {
+                document.getElementById('allCourseGrid').innerHTML = emptyState('📭', 'No courses available yet')
+                return
+            }
+            document.getElementById('allCourseGrid').innerHTML = data.courses.map(c => courseCard(c, true)).join('')
+        }
+
+        async function loadHomeCourses() {
+            document.getElementById('homeCourseGrid').innerHTML = loading()
+            const { ok, data } = await apiFetch('/course/preview')
+            if (!ok || !data.courses?.length) {
+                document.getElementById('homeCourseGrid').innerHTML = emptyState('📭', 'No courses yet')
+                return
+            }
+            document.getElementById('homeCourseGrid').innerHTML = data.courses.slice(0, 3).map(c => courseCard(c, true)).join('')
+        }
+
+        // PURCHASE
+        async function purchaseCourse(courseId, btn) {
+            if (btn) { btn.disabled = true; btn.textContent = '...' }
+            const { ok, data } = await apiFetch('/course/purchase', { method: 'POST', body: JSON.stringify({ courseId }) })
+            if (!ok) {
+                if (btn) { btn.disabled = false; btn.textContent = 'Enroll' }
+                return toast(data.error || 'Purchase failed', 'error')
+            }
+            toast('Enrolled successfully! 🎉')
+            loadAllCourses()
+        }
+
+        // USER PURCHASES
+        async function loadPurchases() {
+            if (!state.token) {
+                document.getElementById('purchaseList').innerHTML = emptyState('🔒', 'Please sign in to view your courses')
+                return
+            }
+            document.getElementById('purchaseList').innerHTML = loading()
+            const saved = state.role; state.role = 'user'
+            const { ok, data } = await apiFetch('/user/purchases')
+            state.role = saved
+            if (!ok || !data.purchases?.length) {
+                document.getElementById('purchaseList').innerHTML = emptyState('📭', 'No courses yet — <a href="#" onclick="showPage(\'courses\')" style="color:var(--accent)">browse courses</a>')
+                return
+            }
+            document.getElementById('purchaseList').innerHTML = data.purchases.map(c => `
+    <div class="purchase-item">
+      <div>
+        <div class="purchase-title">${escHtml(c.title)}</div>
+        <div class="purchase-meta">${escHtml(c.description?.slice(0, 80))}...</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.8rem;flex-shrink:0">
+        <div class="course-price">₹${c.price}</div>
+        <span class="badge badge-success">Enrolled</span>
+      </div>
+    </div>`).join('')
+        }
+
+        // ADMIN COURSES
+        async function loadAdminCourses() {
+            if (!state.adminToken) return
+            const { ok, data } = await apiFetch('/admin/course/bulk')
+            document.getElementById('statCourses').textContent = ok ? (data.courses?.length || 0) : '—'
+            if (!ok || !data.courses?.length) {
+                document.getElementById('adminCourseList').innerHTML = emptyState('📭', 'No courses yet. Create one →')
+                return
+            }
+            document.getElementById('adminCourseList').innerHTML = data.courses.map(c => `
+    <div class="purchase-item" style="margin-bottom:0.8rem">
+      <div style="flex:1">
+        <div class="purchase-title">${escHtml(c.title)}</div>
+        <div class="purchase-meta">₹${c.price} · ${escHtml((c.description || '').slice(0, 55))}...</div>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick='editCourse(${JSON.stringify(c)})'>Edit</button>
+    </div>`).join('')
+        }
+
+        function editCourse(c) {
+            document.getElementById('editCourseId').value = c.id
+            document.getElementById('cf-title').value = c.title || ''
+            document.getElementById('cf-desc').value = c.description || ''
+            document.getElementById('cf-price').value = c.price || ''
+            document.getElementById('cf-img').value = c.imageUrl || ''
+            document.getElementById('courseFormTitle').textContent = 'Edit Course'
+            document.getElementById('cancelEditBtn').style.display = ''
+            document.getElementById('courseSubmitBtn').textContent = 'Update'
+            document.getElementById('courseFormPanel').scrollIntoView({ behavior: 'smooth' })
+        }
+
+        function resetCourseForm() {
+            document.getElementById('editCourseId').value = ''
+            document.getElementById('cf-title').value = ''
+            document.getElementById('cf-desc').value = ''
+            document.getElementById('cf-price').value = ''
+            document.getElementById('cf-img').value = ''
+            document.getElementById('courseFormTitle').textContent = 'New Course'
+            document.getElementById('cancelEditBtn').style.display = 'none'
+            document.getElementById('courseSubmitBtn').textContent = 'Publish'
+            clearErrors('cf-error')
+        }
+
+        async function handleCourseSubmit() {
+            clearErrors('cf-error')
+            const id = document.getElementById('editCourseId').value
+            const title = document.getElementById('cf-title').value.trim()
+            const description = document.getElementById('cf-desc').value.trim()
+            const price = parseFloat(document.getElementById('cf-price').value)
+            const imageUrl = document.getElementById('cf-img').value.trim()
+            if (!title || !description || !price || !imageUrl) return showError('cf-error', 'All fields are required.')
+            const isEdit = !!id
+            const { ok, data } = await apiFetch(isEdit ? `/admin/course/${id}` : '/admin/course', {
+                method: isEdit ? 'PUT' : 'POST',
+                body: JSON.stringify({ title, description, price, imageUrl })
+            })
+            if (!ok) return showError('cf-error', data.error || 'Failed to save course.')
+            toast(isEdit ? 'Course updated ✓' : 'Course published ✓')
+            resetCourseForm()
+            loadAdminCourses()
+        }
+
+        // HELPERS
+        function escHtml(s) {
+            return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+        }
+        function loading() {
+            return '<div class="empty"><div class="empty-icon">◌</div><p class="empty-text">Loading...</p></div>'
+        }
+        function emptyState(icon, text) {
+            return `<div class="empty"><div class="empty-icon">${icon}</div><p class="empty-text">${text}</p></div>`
+        }
+
+        // INIT
+        loadHomeCourses()
+        updateNav()
+    </script>
+</body>
+
+</html>

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { JWT_USER_PASSWORD } from '../configs/config'
+import { JWT_USER_PASSWORD } from '../configs/config.js'
 
 export function userMiddleware(req, res, next) {
     const authHeader = req.headers.authorization
@@ -12,6 +12,7 @@ export function userMiddleware(req, res, next) {
     try {
         const decoded = jwt.verify(token, JWT_USER_PASSWORD)
         req.user = decoded
+        req.userId = decoded.id
         next()
     } catch (err) {
         return res.status(401).json({ error: 'Invalid or expired token' })

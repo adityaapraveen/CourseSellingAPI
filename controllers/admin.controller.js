@@ -55,7 +55,7 @@ export const adminSignin = async (req, res) => {
         }
         const isValidPass = await bcrypt.compare(password, admin.password)
         if (!isValidPass) {
-            return res.status(401).json({ message: "Invalid Password" })
+            return res.status(401).json({ error: "Invalid Password" })
         }
         // Generate JWT
         const token = jwt.sign(
@@ -75,6 +75,85 @@ export const adminSignin = async (req, res) => {
         })
     } catch (err) {
         console.error('Signin error:', err)
+        return res.status(500).json({ error: 'Server error' })
+    }
+}
+
+export const adminCreateCourse = async (req, res) => {
+    const adminId = req.userId
+    const { title, description, price, imageUrl } = req.body
+
+    if (!title || !description || !price || !imageUrl) {
+        return res.status(400).json({ error: "All fields are required." })
+    }
+
+    try {
+        const db = getDatabase()
+        const result = await db.run(
+            `INSERT INTO course (title, description, price, imageUrl, creatorId)
+            VALUES (?, ?, ?, ?, ?)`, [title, description, price, imageUrl, adminId]
+        )
+        return res.status(201).json({
+            message: "Course Created Successfully",
+            courseId: result.lastID
+        })
+    } catch (err) {
+        console.error('Create course error:', err)
+        return res.status(500).json({ error: 'Server error' })
+    }
+}
+
+export const adminEditCourseDetails = async (req, res) => {
+    const adminId = req.userId
+    const { courseId } = req.params
+    const { title, description, price, imageUrl } = req.body
+
+    try {
+        const db = getDatabase()
+
+        // Check if course exists and belongs to this admin
+        const course = await db.get(
+            `SELECT * FROM course WHERE id = ? AND creatorId = ?`,
+            [courseId, adminId]
+        )
+
+        if (!course) {
+            return res.status(404).json({ error: "Course not found or unauthorized" })
+        }
+
+        await db.run(
+            `UPDATE course SET title = ?, description = ?, price = ?, imageUrl = ?
+             WHERE id = ? AND creatorId = ?`,
+            [title, description, price, imageUrl, courseId, adminId]
+        )
+
+        return res.status(200).json({ message: "Course updated successfully" })
+
+    } catch (err) {
+        console.error('Update course error:', err)
+        return res.status(500).json({ error: 'Server error' })
+    }
+
+}
+
+export const adminFetchAllCourses = async (req, res) => {
+    const adminId = req.userId
+
+    try {
+        const db = getDatabase()
+
+        const courses = await db.all(
+            `SELECT * FROM course WHERE creatorId = ?`,
+            [adminId]
+        )
+
+        return res.status(200).json({
+            message: "Courses fetched successfully",
+            courses
+        })
+
+    } catch (err) {
+        console.error('Bulk fetch error:', err)
         return res.status(500).json({ error: 'Server error' })
     }
 }
